@@ -27,6 +27,7 @@ app.get('/',(req,res)=>{
 // Routes
 app.use('/api', authRoutes); 
 app.use('/api', authQuizRoutes); 
+app.use('/api/user', authQuizRoutes); 
 
 // Protected dashboard route
 app.get('/api/dashboard', auth, (req, res) => {
