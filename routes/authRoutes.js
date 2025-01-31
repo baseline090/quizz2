@@ -75,27 +75,13 @@ router.get(
   userQuesController.getQuizById
 );
 
-//------ user Create categories route
-router.post(
-  "/user/add-category",
-  auth(["user"]),
-  categoryController.addCategory
-);
 
-router.get("/user/categories", auth(["user"]), categoryController.getAllCategories);
-
+// Category routes
+router.post('/user/addcategories',auth(["user"]), categoryController.addCategory);
 router.get("/user/allcategories", auth(["user"]), categoryController.getAllCategories);
-
+router.delete('/user/delete/categories',auth(["user"]), categoryController.deleteCategory);
 router.get('/user/categories/:categoryId', auth(['user']), categoryController.getCategoryById);
-router.get('/user/questions/:categoryId', auth(['user']), categoryController.getQuesCategoryById);
-
-
-// Submit quiz results
-// router.post('/user/submit-quiz/:quizId', auth(['user']), resultController.saveQuizResults);
-
-
-// Fetch a user's quiz results
-// router.get('/user/quiz/results/:userId', auth(['user']), resultController.getUserResults);
+router.get('/user/categories/:categoryId/quizzes', auth(['user']), categoryController.getQuesCategoryById);
 
 // User Profile Route (protected)
 router.get("/user/profile", auth(["user"]), userController.getUserProfile);
@@ -119,7 +105,8 @@ router.post("/submit/quiz", auth(["user"]), resultController.submitQuiz);
 router.get('/all-submissions', auth(["user"]), resultController.getAllsubmitQuiz);
 // Fetch all quiz submissions
 
-router.get('/quiz/results/:userId/:quizId', resultController.getAllsubmitQuizById);
+// router.get('/quiz/results/:userId/:quizId', resultController.getAllsubmitQuizById);
+router.get('/result/:resultId', resultController.getResultById);
 
 router.post("/logout", userController.logout);
 

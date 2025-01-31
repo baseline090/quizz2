@@ -38,13 +38,8 @@ router.post(
   adminController.loginAdmin
 );
 
-// --------  Create POST Quiz
-router.post("/admin/quiz", auth(["admin"]), quizController1.addQuiz);
-
-// --------  Get all quizzes
+router.post('/admin/quizzes', auth(["admin"]), quizController1.addQuiz);
 router.get('/admin/quizzes', auth(["admin"]), quizController1.getAllQuiz);
-
-// --------  Delete a quiz by ID
-router.delete('/admin/quiz/:id', auth(["admin"]), quizController1.deleteQuiz);
+router.delete('/admin/quizzes/:id',  auth(["admin"]), quizController1.deleteQuiz);
 
 module.exports = router;
