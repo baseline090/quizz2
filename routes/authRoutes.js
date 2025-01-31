@@ -76,23 +76,14 @@ router.get(
 );
 
 
-// Category routes
-router.post('/user/addcategories',auth(["user"]), categoryController.addCategory);
-router.get("/user/allcategories", auth(["user"]), categoryController.getAllCategories);
-router.delete('/user/delete/categories',auth(["user"]), categoryController.deleteCategory);
-router.get('/user/categories/:categoryId', auth(['user']), categoryController.getCategoryById);
-router.get('/user/categories/:categoryId/quizzes', auth(['user']), categoryController.getQuesCategoryById);
-
 // User Profile Route (protected)
 router.get("/user/profile", auth(["user"]), userController.getUserProfile);
 
-
-
-
-
-// // Apply the JWT authentication middleware
-// router.post('/submit/quiz', authenticateJWT, submitQuiz);
-
+// User Category routes
+router.get("/user/allcategories", auth(["user"]), categoryController.getAllCategories);
+router.delete('/user/delete/categories',auth(["user"]), categoryController.deleteCategory);
+router.get('/user/categories/:categoryId', auth(["user"]), categoryController.getCategoryById);
+router.get('/user/category/:categoryName', auth(["user"]) ,categoryController.getQuizzesByCategoryName);
 
 
 
@@ -110,63 +101,8 @@ router.get('/result/:resultId', resultController.getResultById);
 
 router.post("/logout", userController.logout);
 
-//------------Admin Routes---------------------------------//
 
-// Admin Registration Route
-router.post(
-  "/admin/register",
-  [
-    body("email").isEmail().withMessage("Email is invalid"),
-    body("password")
-      .isLength({ min: 6 })
-      .withMessage("Password must be at least 6 characters"),
-    body("confirmPassword")
-      .exists()
-      .withMessage("Please confirm your password"),
-  ],
-  adminController.registerAdmin
-);
 
-// Admin Login Route
-router.post(
-  "/admin/login",
-  [
-    body("email").isEmail().withMessage("Email is invalid"),
-    body("password").notEmpty().withMessage("Password is required"),
-  ],
-  adminController.loginAdmin
-);
-
-// Admin Routes for getting all Users (protected)
-router.get("/admin/users", auth(["admin"]), adminController.getAllUsers);
-
-// Admin Route for Deleting a User (protected)
-router.delete(
-  "/admin/user/delete",
-  auth(["admin"]),
-  adminController.deleteUser
-);
-
-// Admin Routes for Category Management (protected)
-// router.get(
-//   "/admin/category",
-//   auth(["admin"]),
-//   categoryController.getAllCategories
-// );
-
-// Admin Route for Adding a Category (protected)
-router.post(
-  "/admin/category/add",
-  auth(["admin"]),
-  categoryController.addCategory
-);
-
-// Admin Route for Deleting a Category (protected)
-router.delete(
-  "/admin/category/delete",
-  auth(["admin"]),
-  categoryController.deleteCategory
-);
 
 
 router.post("/admin/logout", adminController.adminLogout);

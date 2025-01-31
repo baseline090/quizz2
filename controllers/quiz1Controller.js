@@ -1,66 +1,42 @@
 // quizController.js
 
 const Quiz = require('../models/Quiz');
+const Category= require('../models/Category');
 
-// Add a new quiz
-exports.addQuiz = async (req, res) => {
-    const { title, description, questions, totalTime, passingCriteria, scorePerQuestion, totalPercentage, categories } = req.body;
-  console.log(req.body ,"req.body");
-    // Field validation
-    if (!title || !description || !questions || !totalTime || !passingCriteria || !scorePerQuestion || !totalPercentage || !categories) {
+//---------- Add a new quiz
+  exports.addQuiz = async (req, res) => {
+    const { name, title, description, questions, passingCriteria, scorePerQuestion, totalPercentage, category } = req.body;
+    console.log("Incoming request body:", req.body);
+  
+    //------ Field validation
+    if (!name || !title || !description || !questions || !passingCriteria || !scorePerQuestion || !totalPercentage || !category) {
       return res.status(400).json({ error: "All fields are required" });
     }
   
-    if (!Array.isArray(questions) || questions.length === 0) {
-      return res.status(400).json({ error: "Questions should be a non-empty array" });
-    }
-  
-     
-    if (!questions.every(q => q.text && Array.isArray(q.options) && q.options.length && q.correctAnswer)) {
-      return res.status(400).json({ error: "Each question must have text, options (non-empty array), and correctAnswer" });
-    }
-  
-    if (!Array.isArray(categories) || categories.length === 0) {
-      return res.status(400).json({ error: "Categories should be a non-empty array" });
-    }
-  
-    if (typeof totalTime !== 'number' || totalTime <= 0) {
-      return res.status(400).json({ error: "Total time must be a positive number" });
-    }
-  
-    if (typeof passingCriteria !== 'number' || passingCriteria <= 0 || passingCriteria > 100) {
-      return res.status(400).json({ error: "Passing criteria must be between 1 and 100" });
-    }
-  
-    if (typeof totalPercentage !== 'number' || totalPercentage < 0 || totalPercentage > 100) {
-      return res.status(400).json({ error: "Total percentage must be between 0 and 100" });
-    }
-  
     try {
-      const adjustedScorePerQuestion = scorePerQuestion || 1;
+      const totalTime = questions.length * 2;  
+      const adjustedScorePerQuestion = Math.max(scorePerQuestion, 1);  
   
-      const calculatePassingScore = (totalQuestions, scorePerQuestion, passingCriteria) => {
-        const totalPossibleScore = totalQuestions * scorePerQuestion;
-        const passingScore = (passingCriteria / 100) * totalPossibleScore;
-        return passingScore;
-      };
   
-      const passingScore = calculatePassingScore(questions.length, adjustedScorePerQuestion, passingCriteria);
-      console.log('passingScore: ', passingScore);
+      const foundCategory = await Category.findOne({ name: category });
+  
+      if (!foundCategory) {
+        return res.status(400).json({ error: "Category not found" });
+      }
   
       const quiz = new Quiz({
-    
+        name,
         title,
         description,
         questions,
         totalTime,
         passingCriteria,
-        scorePerQuestion: adjustedScorePerQuestion,  // Keep original score per question value
-        isAvailable: true,
+        scorePerQuestion: adjustedScorePerQuestion,
         totalPercentage,
-        categories
+        isAvailable: true,
+        category: foundCategory._id 
       });
-      console.log('quiz: ', quiz);
+  
       const savedQuiz = await quiz.save();
       res.status(201).json(savedQuiz);
     } catch (error) {
@@ -68,6 +44,10 @@ exports.addQuiz = async (req, res) => {
       res.status(500).json({ error: "An error occurred while saving the quiz", details: error.message });
     }
   };
+  
+
+  
+  
   
 // Get all quizzes
 exports.getAllQuiz = async (req, res) => {

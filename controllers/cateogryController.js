@@ -88,21 +88,20 @@ exports.getCategoryById = async (req, res) => {
   }
 };
 
-// Get quizzes for a specific category
-exports.getQuesCategoryById = async (req, res) => {
-  const { categoryId } = req.params;
+// Get quizzes by category name
+exports.getQuizzesByCategoryName = async (req, res) => {
+  const { categoryName } = req.params;  
 
-  if (!mongoose.Types.ObjectId.isValid(categoryId)) {
-    return res.status(400).json({ message: 'Invalid Category ID' });
-  }
-
+  
   try {
-    const category = await Category.findById(categoryId);
+    const category = await Category.findOne({ name: categoryName });
+
     if (!category) {
       return res.status(404).json({ message: 'Category not found' });
     }
 
-    const quizzes = await Quiz.find({ categories: categoryId }).populate('categories', 'name');
+    // Fetch all quizzes in this category
+    const quizzes = await Quiz.find({ category: category._id }).populate('category', 'name');
 
     if (quizzes.length > 0) {
       res.status(200).json(quizzes);
@@ -110,7 +109,10 @@ exports.getQuesCategoryById = async (req, res) => {
       res.status(404).json({ message: 'No quizzes found for this category' });
     }
   } catch (error) {
-    console.error('Error fetching quizzes:', error);
-    res.status(500).json({ message: 'Error fetching quizzes for this category' });
+    console.error('Error fetching quizzes for category:', error);
+    res.status(500).json({ message: 'Error fetching quizzes for the category' });
   }
 };
+
+
+
