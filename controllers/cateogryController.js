@@ -8,11 +8,13 @@ const mongoose = require('mongoose');
 exports.addCategory = async (req, res) => {
   try {
     const { name } = req.body;
+    console.log('name: ', name);
     if (!name || name.trim().length === 0) {
       return res.status(400).json({ message: 'Category name is required' });
     }
 
     const existingCategory = await Category.findOne({ name });
+    console.log('existingCategory: ', existingCategory);
     if (existingCategory) {
       return res.status(400).json({ message: 'Category already exists' });
     }
