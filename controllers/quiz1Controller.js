@@ -45,10 +45,6 @@ const Category= require('../models/Category');
     }
   };
   
-
-  
-  
-  
 // Get all quizzes
 exports.getAllQuiz = async (req, res) => {
   try {
