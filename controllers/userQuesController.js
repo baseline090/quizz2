@@ -17,12 +17,9 @@ exports.getAllUserQuiz = async (req, res) => {
   }
 };
 
-// Get quiz by ID
 exports.getQuizById = async (req, res) => {
   const { id: quizId } = req.params; 
-  console.log('quizId: ', quizId);
 
-  // Validate the format of quizId
   if (!mongoose.Types.ObjectId.isValid(quizId)) {
     return res.status(400).json({ message: 'Invalid quiz ID format.' });
   }

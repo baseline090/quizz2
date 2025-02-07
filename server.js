@@ -1,11 +1,7 @@
-
-
 const express = require('express');
 const connectDB = require('./config/db');
 const cors = require('cors');
 const authRoutes = require('./routes/authRoutes'); 
-const auth = require('./middleware/auth'); 
-const authQuizRoutes = require('./routes/authQuizRoutes')
 
 const app = express();
 require('dotenv').config();
@@ -26,27 +22,17 @@ app.get('/',(req,res)=>{
 
 // Routes
 app.use('/api', authRoutes); 
-app.use('/api', authQuizRoutes); 
 
 
-app.get('/api/dashboard', auth, (req, res) => {
+
+app.get('/api/admin/dashboard', (req, res) => {
     res.json({
-        message: 'Welcome to your dashboard!',
+        message: 'Welcome to the Admin Dashboard!',
         user: req.user 
     });
 });
 
 
-// Protected route for testing (Admin Dashboard)
-app.get('/api/admin/dashboard', (req, res) => {
-    res.json({
-        message: 'Welcome to the Admin Dashboard!',
-        user: req.user // Decoded user data from the token
-    });
-});
-
-
-//for testing purpose:
 app.use(express.static('public'));
 
 
