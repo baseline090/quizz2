@@ -246,9 +246,9 @@ exports.updateProfile = async (req, res) => {
     if (phoneNumber) user.phoneNumber = phoneNumber;
     if (profilePic) user.profilePic = profilePic;
    // Validate required fields
-   if (!firstName || !email || !username) {
-    return res.status(400).json({ message: 'Missing required fields.' });
-  }
+  //  if (!firstName || !email || !username) {
+  //   return res.status(400).json({ message: 'Missing required fields.' });
+  // }
 
     // Update profile picture if provided
     if (req.file) {
