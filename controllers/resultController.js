@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Quiz = require('../models/Quiz');
 const Result = require('../models/Result');
 
@@ -21,8 +22,9 @@ exports.submitQuiz = async (req, res) => {
     let correctAnswers = 0;
     let incorrectAnswers = 0;
 
+    // Iterate through the answers and compare them to the correct answers
     for (let i = 0; i < correctAnswersArray.length; i++) {
-
+      // Check if the answer is "none" or incorrect
       if (answers[i] === "none") {
         incorrectAnswers++;
       } else if (correctAnswersArray[i] !== answers[i]) {
@@ -41,7 +43,7 @@ exports.submitQuiz = async (req, res) => {
       totalScore: correctAnswers,
       totalQuestions: correctAnswersArray.length,
       totalPercentage,
-      passFail, 
+      passFail,
       correctAnswer: correctAnswers,
       incorrectAnswer: incorrectAnswers
     };
@@ -60,9 +62,6 @@ exports.submitQuiz = async (req, res) => {
     return res.status(500).json({ error: "An error occurred while submitting the quiz" });
   }
 };
-
-
-
 
 exports.getAllsubmitQuiz = async (req, res) => {
   try {
@@ -83,10 +82,10 @@ exports.getAllsubmitQuiz = async (req, res) => {
   }
 };
 
-
 exports.getResultById = async (req, res) => {
   try {
     const { resultId } = req.params;
+    console.log('resultId: ', resultId);
 
     // Validate if the resultId is a valid ObjectId
     if (!mongoose.Types.ObjectId.isValid(resultId)) {
@@ -105,7 +104,7 @@ exports.getResultById = async (req, res) => {
     // Return the result
     return res.status(200).json({
       message: 'Result fetched successfully',
-      data: result,  // Wrap result in "data" key
+      data: result,
     });
 
   } catch (error) {
@@ -113,3 +112,6 @@ exports.getResultById = async (req, res) => {
     return res.status(500).json({ error: 'An error occurred while fetching the result' });
   }
 };
+
+
+
