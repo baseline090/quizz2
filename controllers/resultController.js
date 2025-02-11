@@ -22,7 +22,6 @@ exports.submitQuiz = async (req, res) => {
     let correctAnswers = 0;
     let incorrectAnswers = 0;
 
-    // Iterate through the answers and compare them to the correct answers
     for (let i = 0; i < correctAnswersArray.length; i++) {
       // Check if the answer is "none" or incorrect
       if (answers[i] === "none") {
